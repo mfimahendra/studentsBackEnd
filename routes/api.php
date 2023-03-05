@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\PassportAuthController;
 use App\Http\Controllers\UniversityController;
 use App\Http\Controllers\CityController;
+use App\Http\Controllers\RegionController;
 use App\Http\Controllers\StudentController;
 
 
@@ -29,10 +30,10 @@ Route::post('/login', [PassportAuthController::class, 'login']);
 Route::middleware('auth:api')->group(function () {
     Route::get('/user', [PassportAuthController::class, 'userInfo']);    
     Route::post('/logout', [PassportAuthController::class, 'logout']);
-
     
+    Route::resource('region', RegionController::class);
+    Route::resource('city', CityController::class);
     Route::resource('university', UniversityController::class);
-    Route::resource('city', CityController::class);    
     Route::resource('student', StudentController::class);
 });
 
