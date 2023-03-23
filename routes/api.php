@@ -7,6 +7,7 @@ use App\Http\Controllers\UniversityController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\RegionController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\PublicController;
 
 
 /*
@@ -32,11 +33,15 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/logout', [PassportAuthController::class, 'logout']);
     
     Route::resource('region', RegionController::class);
-    Route::resource('city', CityController::class);
     Route::resource('university', UniversityController::class);
+    Route::resource('city', CityController::class);
     Route::resource('student', StudentController::class);
+    
 });
 
+Route::get('/total_resume', [PublicController::class, 'index']);
+
+// Route for test
 
 
 

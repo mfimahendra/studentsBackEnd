@@ -44,7 +44,8 @@ class PassportAuthController extends Controller
       
         if (auth()->attempt($data)) {            
             
-            $token = auth()->user()->createToken('Laravel-Passport-Auth')->accessToken;
+            $token = auth()->user()->createToken('Laravel-Passport-Auth')->accessToken;                        
+
 
             $response = [
                 'status' => '200',

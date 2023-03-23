@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cities;
+
+use App\Models\Regions;
 use App\Models\Students;
+use App\Models\Universities;
 use Illuminate\Http\Request;
 
-class StudentController extends Controller
+class PublicController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,18 +18,15 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $students = Students::select('students.passport', 'students.name', 'universities.university_name', 'cities.city', 'regions.region')
-        ->leftjoin('universities', 'universities.id', '=', 'students.university_id')
-        ->leftjoin('cities', 'cities.id', '=', 'universities.city_id')
-        ->leftjoin('regions', 'regions.id', '=', 'cities.region_id')
-        ->orderBy('regions.id', 'asc')
-        ->orderBy('cities.id', 'asc')
-        ->orderBy('universities.id', 'asc')
-        ->get();        
+        $city_count = Cities::count();        
+        $university_count = Universities::count();
+        $student_count = Students::count();
 
         $response = [
             'status' => 'success',
-            'students' => $students
+            'total_city' => $city_count,
+            'total_university' => $university_count,
+            'total_student' => $student_count
         ];
 
         return response()->json($response, 200);
@@ -55,10 +56,10 @@ class StudentController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Students  $students
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Students $students)
+    public function show($id)
     {
         //
     }
@@ -66,10 +67,10 @@ class StudentController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Students  $students
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Students $students)
+    public function edit($id)
     {
         //
     }
@@ -78,10 +79,10 @@ class StudentController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Students  $students
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Students $students)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -89,10 +90,10 @@ class StudentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Students  $students
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Students $students)
+    public function destroy($id)
     {
         //
     }
