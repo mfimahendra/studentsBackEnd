@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Regions;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RegionController extends Controller
 {
@@ -13,8 +14,13 @@ class RegionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        $regions = Regions::all();        
+    {        
+        $regions = Regions::leftJoin('cities', 'regions.id', '=', 'cities.region_id')
+            ->leftJoin('universities', 'cities.id', '=', 'universities.city_id')
+            ->leftJoin('students', 'universities.id', '=', 'students.university_id')                        
+            ->select('regions.id', 'regions.region', 'regions.created_at', 'regions.updated_at', DB::raw('count(distinct students.id) as students_count'), DB::raw('count(distinct cities.id) as cities_count'), DB::raw('count(distinct universities.id) as universities_count'))
+            ->groupBy('regions.id')
+            ->get();
 
         $response = [
             'regions' => $regions
