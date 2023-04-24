@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Universities;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UniversityController extends Controller
 {
@@ -21,8 +22,43 @@ class UniversityController extends Controller
         $universities = Universities::
         leftJoin('cities', 'universities.city_id', '=', 'cities.id')
         ->leftJoin('regions', 'cities.region_id', '=', 'regions.id')        
-        ->select('universities.id', 'universities.university_name', 'cities.city','regions.region')
-        
+        ->leftJoin('students', 'students.university_id', '=', 'universities.id')
+        ->select(
+            'universities.id', 
+            'universities.university_name', 
+            'universities.latitude',
+            'universities.longitude',
+            'cities.city',
+            'regions.region',
+            DB::raw('COUNT(DISTINCT students.passport) AS students_count')
+            )
+        ->groupBy('universities.id', 'universities.university_name', 'cities.city', 'regions.region')
+        ->get();
+        $response = [
+            'stats' => 'success',
+            'universities' => $universities
+        ];
+
+        return response()->json($response, 200);
+    }
+
+    public function indexCity($city)
+    {
+        $city = (int)$city;
+        $universities = Universities::
+        leftJoin('cities', 'universities.city_id', '=', 'cities.id')
+        ->leftJoin('regions', 'cities.region_id', '=', 'regions.id')        
+        ->leftJoin('students', 'students.university_id', '=', 'universities.id')
+        ->select(
+            'universities.id', 
+            'universities.university_name', 
+            'universities.latitude',
+            'universities.longitude',
+            'cities.city',
+            'regions.region',            
+            )
+        ->where('cities.id', $city)
+        ->groupBy('universities.id', 'universities.university_name', 'cities.city', 'regions.region')
         ->get();
         $response = [
             'stats' => 'success',

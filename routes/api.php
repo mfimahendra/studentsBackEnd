@@ -31,17 +31,36 @@ Route::post('/login', [PassportAuthController::class, 'login']);
 Route::middleware('auth:api')->group(function () {
     Route::get('/user', [PassportAuthController::class, 'userInfo']);    
     Route::post('/logout', [PassportAuthController::class, 'logout']);
+
     
     Route::resource('region', RegionController::class);
     Route::resource('university', UniversityController::class);
     Route::resource('city', CityController::class);
+    
     Route::resource('student', StudentController::class);
     
 });
 
-Route::get('/total_resume', [PublicController::class, 'index']);
+// route group prefix student
+Route::group(['prefix' => 'student'], function() {
+    Route::post('/check', [StudentController::class, 'studentCheck']);
+});
 
-// Route for test
+
+
+// route group prefix api
+Route::group(['prefix' => 'public'], function () {
+    Route::get('/total_resume', [PublicController::class, 'index']);
+    Route::get('/region', [RegionController::class, 'index']);
+
+    Route::get('/university', [UniversityController::class, 'index']);
+    Route::get('/university/{city}', [UniversityController::class, 'indexCity']);
+    Route::get('/city', [CityController::class, 'index']);
+    Route::get('/city/{region}', [CityController::class, 'indexRegion']);
+});
+
+
+
 
 
 

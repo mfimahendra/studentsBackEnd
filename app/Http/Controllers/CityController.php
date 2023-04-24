@@ -37,6 +37,30 @@ class CityController extends Controller
         return response()->json($response, 200);
     }
 
+    public function indexRegion($region)
+    {                        
+        $region = (int)$region;
+        $cities = Cities::leftJoin('universities', 'universities.city_id', '=', 'cities.id')
+            ->leftJoin('students', 'students.university_id', '=', 'universities.id')
+            ->leftJoin('regions', 'cities.region_id', '=', 'regions.id')
+            ->select(
+                'cities.id',
+                'cities.city',
+                'cities.latitude',
+                'cities.longitude',
+                'regions.region'                
+            )
+            ->where('regions.id', $region)
+            ->groupBy('cities.id','cities.city', 'cities.latitude', 'cities.longitude', 'regions.region')
+            ->get();
+
+        $response = [
+            'cities' => $cities
+        ];
+
+        return response()->json($response, 200);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
