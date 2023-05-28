@@ -23,6 +23,7 @@ class CityController extends Controller
                 'cities.city',
                 'cities.latitude',
                 'cities.longitude',
+                'cities.region_id',
                 'regions.region',
                 DB::raw('COUNT(DISTINCT universities.id) AS universities_count'),
                 DB::raw('COUNT(DISTINCT students.passport) AS students_count')
@@ -68,9 +69,7 @@ class CityController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        // dd($request->all());
-
+    {        
         try {
 
             if (Cities::where('city', $request->city)->exists()) {
@@ -102,6 +101,7 @@ class CityController extends Controller
 
         $response = [
             'status' => 'success',
+            'message' => 'City added successfully',
             'city' => $city
         ];
 

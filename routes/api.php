@@ -25,12 +25,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
  
-Route::post('/register', [PassportAuthController::class, 'register']);
-Route::post('/login', [PassportAuthController::class, 'login']);
+Route::post('/register', [PassportAuthController::class, 'register'])->name('register');
+Route::post('/login', [PassportAuthController::class, 'login'])->name('login');
   
 Route::middleware('auth:api')->group(function () {
-    Route::get('/user', [PassportAuthController::class, 'userInfo']);    
-    Route::post('/logout', [PassportAuthController::class, 'logout']);
+    Route::get('/user', [PassportAuthController::class, 'userInfo'])->name('user');    
+    Route::post('/logout', [PassportAuthController::class, 'logout'])->name('logout');
 
     
     Route::resource('region', RegionController::class);
@@ -43,20 +43,22 @@ Route::middleware('auth:api')->group(function () {
 
 // route group prefix student
 Route::group(['prefix' => 'student'], function() {
-    Route::post('/check', [StudentController::class, 'studentCheck']);
+    Route::post('/check', [StudentController::class, 'studentCheck'])->name('studentCheck');
+    Route::post('/register', [StudentController::class, 'store'])->name('studentRegister');
 });
 
 
 
 // route group prefix api
 Route::group(['prefix' => 'public'], function () {
-    Route::get('/total_resume', [PublicController::class, 'index']);
-    Route::get('/region', [RegionController::class, 'index']);
+    Route::get('/total_resume', [PublicController::class, 'index'])->name('totalResume');
+    Route::get('/region', [RegionController::class, 'index'])->name('regionIndex');
 
-    Route::get('/university', [UniversityController::class, 'index']);
-    Route::get('/university/{city}', [UniversityController::class, 'indexCity']);
-    Route::get('/city', [CityController::class, 'index']);
-    Route::get('/city/{region}', [CityController::class, 'indexRegion']);
+    Route::get('/university', [UniversityController::class, 'index'])->name('universityIndex');
+    Route::get('/university/{city}', [UniversityController::class, 'indexCity'])->name('universityIndexCity');
+    Route::get('/city', [CityController::class, 'index'])->name('cityIndex');
+    Route::get('/city/{region}', [CityController::class, 'indexRegion'])->name('cityIndexRegion');
+    
 });
 
 

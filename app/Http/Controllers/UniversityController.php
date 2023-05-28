@@ -14,11 +14,7 @@ class UniversityController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        // $cities = Cities::select('cities.id', 'cities.city', 'cities.latitude', 'cities.longitude', 'regions.region')
-        // ->leftJoin('regions', 'cities.region_id', '=', 'regions.id')        
-        // ->get();        
-
+    {          
         $universities = Universities::
         leftJoin('cities', 'universities.city_id', '=', 'cities.id')
         ->leftJoin('regions', 'cities.region_id', '=', 'regions.id')        
@@ -28,6 +24,7 @@ class UniversityController extends Controller
             'universities.university_name', 
             'universities.latitude',
             'universities.longitude',
+            'universities.city_id',
             'cities.city',
             'regions.region',
             DB::raw('COUNT(DISTINCT students.passport) AS students_count')
@@ -92,6 +89,10 @@ class UniversityController extends Controller
             $university = new Universities();
             $university->university_name = $university_name;
             $university->city_id = $request->city_id;
+            $university->latitude = $request->latitude;
+            $university->longitude = $request->longitude;
+            $university->created_at = date('Y-m-d H:i:s');
+            $university->updated_at = date('Y-m-d H:i:s');
             $university->save();
 
             $response = [

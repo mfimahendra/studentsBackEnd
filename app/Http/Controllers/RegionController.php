@@ -18,7 +18,10 @@ class RegionController extends Controller
         $regions = Regions::leftJoin('cities', 'regions.id', '=', 'cities.region_id')
             ->leftJoin('universities', 'cities.id', '=', 'universities.city_id')
             ->leftJoin('students', 'universities.id', '=', 'students.university_id')                        
-            ->select('regions.id', 'regions.region', 'regions.created_at', 'regions.updated_at', DB::raw('count(distinct students.id) as students_count'), DB::raw('count(distinct cities.id) as cities_count'), DB::raw('count(distinct universities.id) as universities_count'))
+            ->select('regions.id', 'regions.region', 'regions.created_at', 'regions.updated_at', 
+                DB::raw('count(distinct students.id) as students_count'),
+                DB::raw('count(distinct cities.id) as cities_count'), 
+                DB::raw('count(distinct universities.id) as universities_count'))
             ->groupBy('regions.id')
             ->get();
 
